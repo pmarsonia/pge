@@ -1,0 +1,7 @@
+api_gateway_url: uploadcsv
+
+critical_alert_topic_arn: arn:aws:sns:us-west-2:570544074649:pge-critical
+warning_alert_topic_arn: arn:aws:sns:us-west-2:570544074649:pge-warning
+
+function_error_alert_threshold: 10 # Threshold of errors before sending alerts
+function_error_alert_period: 60 # Seconds for errors to count towards threshold

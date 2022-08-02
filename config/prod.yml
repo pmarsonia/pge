@@ -1,0 +1,4 @@
+memory_size: 128
+json_url_host: "https://gbfs.divvybikes.com"
+s3_filename: "pge.csv"
+bucket_name: "s3pge"

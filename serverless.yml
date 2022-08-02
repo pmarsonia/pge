@@ -1,0 +1,53 @@
+service: pge
+
+frameworkVersion: '3'
+
+plugins:
+  - serverless-plugin-aws-alerts
+  - serverless-offline
+
+custom:
+  alerts:
+    stages:
+      - prod
+      - stage
+    topics:
+      ok: ${file(config/${self:provider.stage}_infra.yml):critical_alert_topic_arn}
+      alarm: ${file(config/${self:provider.stage}_infra.yml):critical_alert_topic_arn}
+    alarms:
+      - functionErrors
+    definitions:
+      functionErrors:
+        threshold: ${file(config/${self:provider.stage}_infra.yml):function_error_alert_threshold}
+        period: ${file(config/${self:provider.stage}_infra.yml):function_error_alert_period}
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: ${opt:region, 'us-west-2'}
+  stage: ${opt:stage, 'dev'}
+  tags:
+    Environment: ${self:provider.stage}
+    Service: ${self:service}
+  environment:
+    STAGE: ${self:provider.stage}
+    JSON_API_HOST: ${file(config/${self:provider.stage}.yml):json_url_host}
+    S3_FILENAME: ${file(config/${self:provider.stage}.yml):s3_filename}
+    S3_BUCKET_NAME: ${file(config/${self:provider.stage}.yml):bucket_name}
+    
+package:
+  include:
+    - build
+    - src
+    - node_modules
+
+functions:
+  pgeLBFirstFunction:
+    handler: build/pgeFirstFunction.handler
+    description: The ${self:service} function
+    memorySize: ${file(config/${self:provider.stage}.yml):memory_size}
+    timeout: 15
+    reservedConcurrency: 1
+    events:
+      - httpApi:
+          method: GET
+          path: /${self:provider.stage}/${file(config/${self:provider.stage}_infra.yml):api_gateway_url}

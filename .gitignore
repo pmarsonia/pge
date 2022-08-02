@@ -1,0 +1,14 @@
+.DS_Store
+.idea/
+*.iml
+node_modules/
+build/
+*.log*
+artifacts/*
+.nyc_output/
+npm-debug.log
+coverage
+dist/*
+test-results.xml
+.bash_history
+package-lock.json
