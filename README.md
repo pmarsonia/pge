@@ -15,4 +15,4 @@ serverless deploy --stage dev --aws-profile pradip-pge-gmail
     serverless offline
 
 3. Running the following curl command should trigger your function.
-    curl "http://localhost:3000/hello"
+    curl "http://localhost:3000/dev/uploadcsv"
